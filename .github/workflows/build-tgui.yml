@@ -29,16 +29,15 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           nvm install 18
-          nvm use 18
           corepack enable
 
           cd tgui
           bin/tgui
       - name: Commit and Push
         run: |
-          git add ./tgui/packages/tgui/public/
           git diff --exit-code > /dev/null
           if [ $? -ne 0 ]; then
+            git add ./tgui/packages/tgui/public/
             git commit -m "Build and update TGUI"
             git push
           fi
