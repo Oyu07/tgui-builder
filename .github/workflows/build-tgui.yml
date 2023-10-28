@@ -35,8 +35,7 @@ jobs:
           bin/tgui
       - name: Commit and Push
         run: |
-          git diff --exit-code > /dev/null
-          if [ $? -ne 0 ]; then
+          if ! git diff --exit-code > /dev/null; then
             git add ./tgui/packages/tgui/public/
             git commit -m "Build and update TGUI"
             git push
