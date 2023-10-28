@@ -24,7 +24,7 @@ jobs:
         with:
           repository: ${{ env.DEFAULT_REPOSITORY || inputs.repository }}
           ref: ${{ inputs.branch }}
-          ssh-key: ${{ secrets.repository_ssh_key }}
+          ssh-key: ${{ secrets.REPOSITORY_SSH_KEY }}
       - name: Install Dependencies
         run: |
           source ~/.nvm/nvm.sh
