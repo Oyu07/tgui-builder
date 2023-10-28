@@ -33,7 +33,7 @@ jobs:
           corepack enable
 
           cd tgui
-          bin/tgui --ci
+          bin/tgui
       - name: Commit and Push
         run: |
           git add ./tgui/packages/tgui/public/
