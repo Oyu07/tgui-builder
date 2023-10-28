@@ -1,0 +1,41 @@
+name: Build tgui
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: The repository to check out.
+        required: false
+        type: string
+      branch:
+        description: The branch in the repository to check out.
+        required: true
+        type: string
+
+jobs:
+  build-tgui:
+    name: Build tgui
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.DEFAULT_REPOSITORY || inputs.repository }}
+          ref: ${{ inputs.branch }}
+          ssh-key: ${{ secrets.repository_ssh_key }}
+      - name: Install Dependencies
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm install 18
+          nvm use 18
+          corepack enable
+
+          cd tgui
+          bin/tgui --ci
+      - name: Commit and Push
+        run: |
+          git add ./tgui/packages/tgui/public/
+          git commit -m "Build and update TGUI"
+          git push
