@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
     inputs:
       repository:
-        default: ${{ vars.DEFAULT_REPOSITORY }}
         description: The repository to check out.
         required: false
         type: string
