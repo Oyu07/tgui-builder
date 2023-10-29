@@ -2,6 +2,10 @@ name: Build tgui
 on:
   workflow_dispatch:
     inputs:
+      upstream-repository:
+        description: The upstream repository.
+        required: false
+        type: string
       repository:
         description: The repository to check out.
         required: false
@@ -10,6 +14,10 @@ on:
         description: The branch in the repository to check out.
         required: true
         type: string
+
+env:
+  REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
+  UPSTREAM_REPOSITORY: ${{ vars.UPSTREAM_REPOSITORY || inputs.upstream-repository }}
 
 jobs:
   build-tgui:
@@ -22,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
+          repository: ${{ env.REPOSITORY }}
           ref: ${{ inputs.branch }}
           ssh-key: ${{ secrets.REPOSITORY_SSH_KEY }}
       - name: Install Dependencies
@@ -38,16 +46,25 @@ jobs:
           path: |
             ${{ env.YARN_CACHE_DIR }}
       - name: Try to Fetch Upstream
-        env:
-          REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
+        if: ${{ env.UPSTREAM_REPOSITORY }}
         run: |
-          git fetch "git@github.com:$REPOSITORY.git" master && git merge FETCH_HEAD
+          behind_by=curl -L -s --fail-with-body \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$UPSTREAM_REPOSITORY/compare/${UPSTREAM_REPOSITORY%%/*}:master...${REPOSITORY%%/*}:master" \
+            | jq '.behind_by'
+          if [ $behind_by -le 0 ] ; then
+            echo 'No changes to merge. Skipping step.'
+            exit 0
+          fi
+          git fetch --unshallow origin @
+          git fetch "git@github.com:$UPSTREAM_REPOSITORY.git" master && git merge FETCH_HEAD
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code)
           exit_code=$?
           if [ $exit_code -eq 0 ] ; then
             exit 0
           elif ! echo $merge_conflicts | grep -v ^tgui/packages/tgui/public/ ;
-            echo 'Automatic merge failed: non-tgui bundle files have conflicts'
+            echo 'Automatic merge failed: non-tgui bundle files have conflicts.'
             exit 1
           fi
       - name: Build
