@@ -33,6 +33,10 @@ jobs:
           repository: ${{ env.REPOSITORY }}
           ref: ${{ inputs.branch }}
           ssh-key: ${{ secrets.REPOSITORY_SSH_KEY }}
+      - name: Setup Git User
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "tgui builder"
       - name: Install Dependencies
         run: |
           source ~/.nvm/nvm.sh
@@ -76,8 +80,6 @@ jobs:
       - name: Commit and Push
         run: |
           if ! git diff --exit-code > /dev/null; then
-            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git config --global user.name "tgui builder"
             git add ./tgui/packages/tgui/public/
             git commit -m "Build and update tgui"
             git push
