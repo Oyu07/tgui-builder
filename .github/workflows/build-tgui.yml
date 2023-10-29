@@ -48,11 +48,11 @@ jobs:
       - name: Try to Fetch Upstream
         if: ${{ env.UPSTREAM_REPOSITORY }}
         run: |
-          behind_by=curl -L -s --fail-with-body \
+          behind_by=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/$UPSTREAM_REPOSITORY/compare/${UPSTREAM_REPOSITORY%%/*}:master...${REPOSITORY%%/*}:master" \
-            | jq '.behind_by'
+            | jq '.behind_by')
           if [ $behind_by -le 0 ] ; then
             echo 'No changes to merge. Skipping step.'
             exit 0
