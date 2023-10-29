@@ -37,6 +37,18 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           path: |
             ${{ env.YARN_CACHE_DIR }}
+      - name: Try to Fetch Upstream
+        run: |
+          git fetch upstream master:master
+          git merge master
+          merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code)
+          exit_code=$?
+          if [ $exit_code -eq 0 ] ; then
+            exit 0
+          elif ! echo $merge_conflicts | grep -v ^tgui/packages/tgui/public/ ;
+            echo 'Automatic merge failed: non-tgui bundle files have conflicts'
+            exit 1
+          fi
       - name: Build
         run: |
           source ~/.nvm/nvm.sh
