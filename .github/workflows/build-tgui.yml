@@ -36,6 +36,8 @@ jobs:
       - name: Commit and Push
         run: |
           if ! git diff --exit-code > /dev/null; then
+            git config --global user.email "action@github.com"
+            git config --global user.name "tgui builder"
             git add ./tgui/packages/tgui/public/
             git commit -m "Build and update TGUI"
             git push
