@@ -38,9 +38,10 @@ jobs:
           path: |
             ${{ env.YARN_CACHE_DIR }}
       - name: Try to Fetch Upstream
+        env:
+          REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
         run: |
-          git fetch upstream master:master
-          git merge master
+          git fetch "git@github.com:$REPOSITORY.git" master && git merge FETCH_HEAD
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code)
           exit_code=$?
           if [ $exit_code -eq 0 ] ; then
