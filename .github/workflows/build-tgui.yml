@@ -51,7 +51,7 @@ jobs:
         with:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           path: |
-            '**/node_modules'
+            **/node_modules
             ${{ env.TGUI_YARN_CACHE_DIR }}
       - name: Try to Fetch Upstream
         if: ${{ env.UPSTREAM_REPOSITORY }}
