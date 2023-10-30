@@ -79,10 +79,10 @@ jobs:
           bin/tgui
       - name: Commit and Push
         run: |
-          if ! git diff --exit-code > /dev/null; then
+          if git diff --exit-code > /dev/null; then
+            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
+          else
             git add ./tgui/packages/tgui/public/
             git commit -m "Build and update tgui"
             git push
-          else
-            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
