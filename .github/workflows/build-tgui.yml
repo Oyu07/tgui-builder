@@ -2,10 +2,6 @@ name: Build tgui
 on:
   workflow_dispatch:
     inputs:
-      upstream-repository:
-        description: The upstream repository.
-        required: false
-        type: string
       repository:
         description: The repository to check out.
         required: false
@@ -17,7 +13,6 @@ on:
 
 env:
   REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
-  UPSTREAM_REPOSITORY: ${{ vars.UPSTREAM_REPOSITORY || inputs.upstream-repository }}
 
 jobs:
   build-tgui:
@@ -53,22 +48,21 @@ jobs:
           path: |
             **/node_modules
             ${{ env.TGUI_YARN_CACHE_DIR }}
-      - name: Try to Fetch Upstream
-        if: ${{ env.UPSTREAM_REPOSITORY }}
+      - name: Update Branch
         run: |
           behind_by=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$UPSTREAM_REPOSITORY/compare/${UPSTREAM_REPOSITORY%%/*}:master...${REPOSITORY%%/*}:master" \
+            "https://api.github.com/repos/$REPOSITORY/compare/master...${{ inputs.branch }}" \
             | jq '.behind_by')
           if [ $behind_by -le 0 ] ; then
-            echo '- Skipping upstream merge. No changes to merge.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo '- Skipping master merge. No changes to merge.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           else
-            echo '- Merging upstream branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo '- Merging master branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
           git fetch --unshallow origin @
-          git fetch "git@github.com:$UPSTREAM_REPOSITORY.git" master && { git merge FETCH_HEAD || true ; }
+          git fetch origin master && { git merge FETCH_HEAD || true ; }
           exit_code=0
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
           if [ $exit_code -eq 0 ] ; then
