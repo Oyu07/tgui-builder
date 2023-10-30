@@ -68,7 +68,7 @@ jobs:
             echo '- Merging upstream branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
           git fetch --unshallow origin @
-          git fetch "git@github.com:$UPSTREAM_REPOSITORY.git" master && git merge FETCH_HEAD
+          git fetch "git@github.com:$UPSTREAM_REPOSITORY.git" master && { git merge FETCH_HEAD || true ; }
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code)
           exit_code=$?
           if [ $exit_code -eq 0 ] ; then
