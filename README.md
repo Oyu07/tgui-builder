@@ -5,7 +5,7 @@ A GitHub workflow which builds tgui from a selected repository on-demand.
 "Builder Repository" refers to this or a fork of this repository. "Paracode Repository" refers to a fork of the Paradise repository
 
 1. Fork this repository
-1. Configure the default Paracode repository by adding a repository environment variable(Settings > Secrets and variables > Actions > Variables) to the builder repository with the name `DEFAULT_REPOSITORY` in the format `Username/Paradise`. For example, `Arthri/Paradise`
+1. Configure the default Paracode repository by adding a repository variable(Settings > Secrets and variables > Actions > Variables) to the builder repository with the name `DEFAULT_REPOSITORY` in the format `Username/Paradise`. For example, `Arthri/Paradise`
 1. Pick and implement one authentication method
 1. Go to the Actions tab, select the "Build tgui" workflow from the left panel, and initiate a run
 
