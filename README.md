@@ -21,3 +21,6 @@ A GitHub workflow which builds tgui from a selected repository on-demand.
 1. Limit the PAT's access to the Paracode repository
 1. Under "Repository permissions", give the PAT write access to the repository's contents(pull/push permissions)
 1. Add the PAT as a repository secret(Settings > Secrets and variables > Actions) to the builder repository with the name `REPOSITORY_TOKEN`
+
+### Custom Username and Email
+By default, the commit is created by the user "tgui builder" with the email `41898282+github-actions[bot]@users.noreply.github.com`. The email can be changed by creating a repository variable(Settings > Secrets and variables > Actions > Variables) with the name `GIT_EMAIL`, while the username can be changed by creating a repository variable with the name `GIT_USERNAME`

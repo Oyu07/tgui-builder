@@ -31,8 +31,8 @@ jobs:
           token: ${{ secrets.REPOSITORY_TOKEN }}
       - name: Setup Git User
         run: |
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "tgui builder"
+          git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          git config --global user.name ${{ vars.GIT_USERNAME || 'tgui builder' }}
       - name: Install Dependencies
         run: |
           source ~/.nvm/nvm.sh
