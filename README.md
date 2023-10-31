@@ -16,7 +16,7 @@ A GitHub workflow which builds tgui from a selected repository on-demand.
 1. Add the public key as a deploy key(Settings > Deploy keys) to the Paracode repository. Give the key write access
 1. Add the private key as a repository secret(Settings > Secrets and variables > Actions) to the builder repository with the name `REPOSITORY_SSH_KEY`
 
-#### Personal Access Token (PAT)
+#### Personal Access Tokens (PAT)
 1. Go to https://github.com/settings/personal-access-tokens/new and create a new PAT
 1. Limit the PAT's access to the Paracode repository
 1. Under "Repository permissions", give the PAT write access to the repository's contents(pull/push permissions)
