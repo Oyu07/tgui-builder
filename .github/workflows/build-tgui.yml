@@ -28,7 +28,7 @@ jobs:
           repository: ${{ env.REPOSITORY }}
           ref: ${{ inputs.branch }}
           ssh-key: ${{ secrets.REPOSITORY_SSH_KEY }}
-          token: ${{ secrets.REPOSITORY_TOKEN || '' }}
+          token: ${{ secrets.REPOSITORY_TOKEN || github.token }}
       - name: Setup Git User
         run: |
           git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
