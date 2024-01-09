@@ -36,7 +36,7 @@ jobs:
       - name: Install Dependencies
         run: |
           source ~/.nvm/nvm.sh
-          nvm install 18
+          nvm install 20
           corepack enable
           tgui_yarn_cache_dir=$(cd tgui ; yarn config get cacheFolder)
           if [ -n $tgui_yarn_cache_dir ] && [ $tgui_yarn_cache_dir != 'undefined' ] ; then
@@ -75,7 +75,7 @@ jobs:
       - name: Build
         run: |
           source ~/.nvm/nvm.sh
-          nvm use 18
+          nvm use 20
           cd tgui
           bin/tgui
       - name: Commit and Push
