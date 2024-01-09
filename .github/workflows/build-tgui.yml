@@ -37,18 +37,13 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           nvm install 20
-          corepack enable
-          tgui_yarn_cache_dir=$(cd tgui ; yarn config get cacheFolder)
-          if [ -n $tgui_yarn_cache_dir ] && [ $tgui_yarn_cache_dir != 'undefined' ] ; then
-            echo 'TGUI_YARN_CACHE_DIR='"$(tgui_yarn_cache_dir)" >> "$GITHUB_ENV"
-          fi
       - name: Cache Dependencies
         uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           path: |
             **/node_modules
-            ${{ env.TGUI_YARN_CACHE_DIR }}
+            **/.yarn
       - name: Update Branch
         run: |
           behind_by=$(curl -L -s --fail-with-body \
