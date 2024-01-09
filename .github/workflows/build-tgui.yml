@@ -68,7 +68,7 @@ jobs:
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
           if [ $exit_code -eq 0 ] ; then
             exit 0
-          elif echo $merge_conflicts | grep -v ^tgui/packages/tgui/public/ ; then
+          elif echo $merge_conflicts | grep -v ^tgui/public/ ; then
             echo '- Automatic merge failed. Non-tgui bundle files have conflicts.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
@@ -83,7 +83,7 @@ jobs:
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
             echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
-            git add ./tgui/packages/tgui/public/
+            git add --all
             git commit -m "Build and update tgui"
             git push
           fi
