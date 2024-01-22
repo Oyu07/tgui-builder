@@ -39,9 +39,12 @@ jobs:
           git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
           git config --global user.name ${{ vars.GIT_USERNAME || 'tgui builder' }}
       - name: Install Dependencies
+        id: install-dependencies
         run: |
           source ~/.nvm/nvm.sh
           nvm install 20
+          echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
+          echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
       - name: Cache Dependencies
         uses: actions/cache@v3
         with:
@@ -49,6 +52,8 @@ jobs:
           path: |
             **/node_modules
             **/.yarn
+            ${{ steps.install-dependencies.outputs.NPM_CACHE_DIR }}
+            ${{ steps.install-dependencies.outputs.NPM_GLOBAL_CACHE_DIR }}
       - name: Update Branch
         if: ${{ inputs.merge-master }}
         run: |
