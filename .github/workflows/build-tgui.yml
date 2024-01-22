@@ -63,8 +63,7 @@ jobs:
           else
             echo '- Merging master branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-          git fetch --unshallow origin @
-          git fetch origin master && { git merge FETCH_HEAD || true ; }
+          git fetch origin master --depth=$behind_by && { git merge FETCH_HEAD || true ; }
           exit_code=0
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
           if [ $exit_code -eq 0 ] ; then
