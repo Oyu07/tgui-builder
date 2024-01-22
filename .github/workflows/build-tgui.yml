@@ -10,6 +10,11 @@ on:
         description: The branch in the repository to check out.
         required: true
         type: string
+      merge-master:
+        default: true
+        description: If set to true, the master branch will be merged into the current branch before building.
+        required: false
+        type: boolean
 
 env:
   REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
@@ -45,6 +50,7 @@ jobs:
             **/node_modules
             **/.yarn
       - name: Update Branch
+        if: ${{ inputs.merge-master }}
         run: |
           behind_by=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
