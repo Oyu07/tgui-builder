@@ -12,7 +12,7 @@ on:
         type: string
       merge-master:
         default: true
-        description: If set to true, the master branch will be merged into the current branch before building.
+        description: If checked or set to true, the master branch will be merged into the current branch before building.
         required: false
         type: boolean
 
