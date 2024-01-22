@@ -93,4 +93,5 @@ jobs:
             git add --all
             git commit -m "Build and update tgui"
             git push
+            echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
