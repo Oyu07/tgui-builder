@@ -56,6 +56,8 @@ jobs:
             ${{ steps.install-dependencies.outputs.NPM_GLOBAL_CACHE_DIR }}
       - name: Update Branch
         if: ${{ inputs.merge-master }}
+        env:
+          CURRENT_BRANCH: ${{ inputs.branch }}
         run: |
           compare_result=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
@@ -69,7 +71,7 @@ jobs:
           else
             echo '- Merging master branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-          git fetch origin @ --depth=$((ahead_by + 1))
+          git fetch origin "$CURRENT_BRANCH" --depth=$((ahead_by + 1))
           git fetch origin master --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
           exit_code=0
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
