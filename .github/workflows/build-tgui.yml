@@ -57,18 +57,20 @@ jobs:
       - name: Update Branch
         if: ${{ inputs.merge-master }}
         run: |
-          behind_by=$(curl -L -s --fail-with-body \
+          compare_result=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$REPOSITORY/compare/master...${{ inputs.branch }}" \
-            | jq '.behind_by')
+            "https://api.github.com/repos/$REPOSITORY/compare/master...${{ inputs.branch }}")
+          behind_by=$(compare_result | jq '.behind_by')
+          ahead_by=$(compare_result | jq '.ahead_by')
           if [ $behind_by -le 0 ] ; then
             echo '- Skipping master merge. No changes to merge.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           else
             echo '- Merging master branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-          git fetch origin master --depth=$behind_by && { git merge FETCH_HEAD || true ; }
+          git fetch origin @ --depth=$((ahead_by + 1))
+          git fetch origin master --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
           exit_code=0
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
           if [ $exit_code -eq 0 ] ; then
