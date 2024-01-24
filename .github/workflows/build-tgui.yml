@@ -101,7 +101,7 @@ jobs:
             exit 1
           fi
 
-      - name: Build
+      - name: Build /tg/ui
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
