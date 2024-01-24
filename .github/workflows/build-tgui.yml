@@ -18,6 +18,7 @@ on:
 
 env:
   DEFAULT_BRANCH: ${{ vars.DEFAULT_BRANCH || 'master' }}
+  NODE_MAJOR_VERSION: ${{ vars.NODE_MAJOR_VERSION || 20 }}
   REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
 
 jobs:
@@ -39,11 +40,25 @@ jobs:
         run: |
           git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
           git config --global user.name ${{ vars.GIT_USERNAME || '/tg/ui Builder' }}
+
+      - name: Get Information from Node Version Manager
+        run: |
+          source ~/.nvm/nvm.sh
+          echo 'NVM_DIR='"$NVM_DIR" >> "$GITHUB_ENV"
+          echo 'NODE_VERSION='"$(nvm version-remote $NODE_MAJOR_VERSION)" >> "$GITHUB_ENV"
+      - name: Cache Node.js
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}
+          path: |
+            ${{ env.NVM_DIR }}
+
       - name: Install Dependencies
         id: install-dependencies
         run: |
           source ~/.nvm/nvm.sh
-          nvm install 20
+          nvm install "$NODE_VERSION"
+          nvm alias default "$NODE_VERSION"
           echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
           echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
       - name: Cache Dependencies
@@ -85,7 +100,7 @@ jobs:
       - name: Build
         run: |
           source ~/.nvm/nvm.sh
-          nvm use 20
+          nvm use default
           cd tgui
           bin/tgui
       - name: Commit and Push
