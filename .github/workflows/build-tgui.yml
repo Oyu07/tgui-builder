@@ -47,7 +47,7 @@ jobs:
           echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
           echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
       - name: Cache Dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           path: |
