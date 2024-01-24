@@ -30,12 +30,14 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           repository: ${{ env.REPOSITORY }}
           ref: ${{ inputs.branch }}
           ssh-key: ${{ secrets.REPOSITORY_SSH_KEY }}
           token: ${{ secrets.REPOSITORY_TOKEN || github.token }}
+
       - name: Setup Git User
         run: |
           git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
@@ -70,6 +72,7 @@ jobs:
             **/.yarn
             ${{ steps.install-dependencies.outputs.NPM_CACHE_DIR }}
             ${{ steps.install-dependencies.outputs.NPM_GLOBAL_CACHE_DIR }}
+
       - name: Update Branch
         if: ${{ inputs.merge-default-branch }}
         env:
@@ -97,12 +100,14 @@ jobs:
             echo '- Automatic merge failed. Non-tgui bundle files have conflicts.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
+
       - name: Build
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
           cd tgui
           bin/tgui
+
       - name: Commit and Push
         run: |
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
