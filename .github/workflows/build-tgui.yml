@@ -1,4 +1,4 @@
-name: Build tgui
+name: Build /tg/ui
 on:
   workflow_dispatch:
     inputs:
@@ -21,7 +21,7 @@ env:
 
 jobs:
   build-tgui:
-    name: Build tgui
+    name: Build /tg/ui
     runs-on: ubuntu-22.04
 
     permissions:
@@ -37,7 +37,7 @@ jobs:
       - name: Setup Git User
         run: |
           git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
-          git config --global user.name ${{ vars.GIT_USERNAME || 'tgui builder' }}
+          git config --global user.name ${{ vars.GIT_USERNAME || '/tg/ui Builder' }}
       - name: Install Dependencies
         id: install-dependencies
         run: |
