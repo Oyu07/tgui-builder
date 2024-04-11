@@ -111,7 +111,7 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
-          (cd tgui-prettier.bat && bin/tgui)
+          (cd tgui && bin/tgui-prettier.bat)
 
       - name: Commit and Push
         run: |
