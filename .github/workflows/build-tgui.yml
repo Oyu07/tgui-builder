@@ -107,6 +107,12 @@ jobs:
           nvm use default
           (cd tgui && bin/tgui --mode=production)
 
+      - name: Run Prettier
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm use default
+          (cd  && bin/tgui)
+
       - name: Commit and Push
         run: |
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
