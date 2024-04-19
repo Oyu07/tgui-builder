@@ -105,12 +105,13 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
-          (cd tgui && bin/tgui --mode=production)
+          cd tgui && bin/tgui --mode=production
           
-      - name: Run Prettier
+      - name: Run Pretter
         run: |
-          cd tgui && bin/tgui
-          prettier.bat
+          source ~/.nvm/nvm.sh
+          nvm use default
+          cd tgui && bin/tgui --prettier
 
       - name: Commit and Push
         run: |
