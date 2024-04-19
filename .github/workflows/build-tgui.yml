@@ -17,7 +17,7 @@ on:
         type: boolean
 
 env:
-  DEFAULT_BRANCH: ${{ vars.DEFAULT_BRANCH || 'Prettier-action' }}
+  DEFAULT_BRANCH: ${{ vars.DEFAULT_BRANCH || 'master' }}
   NODE_MAJOR_VERSION: ${{ vars.NODE_MAJOR_VERSION || 20 }}
   REPOSITORY: ${{ vars.DEFAULT_REPOSITORY || inputs.repository }}
 
