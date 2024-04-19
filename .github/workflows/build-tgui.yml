@@ -63,6 +63,7 @@ jobs:
           nvm alias default "$NODE_VERSION"
           echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
           echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
+          
       - name: Cache Dependencies
         uses: actions/cache@v4
         with:
@@ -100,6 +101,12 @@ jobs:
             echo '- Automatic merge failed. Non-tgui bundle files have conflicts.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
+          
+      - name: Run Prettier
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm use default
+          cd tgui && bin/tgui --prettier
 
       - name: Build /tg/ui
         run: |
@@ -107,12 +114,6 @@ jobs:
           nvm use default
           cd tgui && bin/tgui --mode=production
           
-      - name: Run Pretter
-        run: |
-          source ~/.nvm/nvm.sh
-          nvm use default
-          cd tgui && bin/tgui --prettier
-
       - name: Commit and Push
         run: |
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
